@@ -7,6 +7,7 @@ function ejemplo() {
     dirIpOrigen    = Dirección IP	origen:	Cuadro de texto en notación decimal.
     dirIpDestino   = Dirección IP	destino: Cuadro de texto en notación decimal.
     */
+    
     uTransferencia = 0
     ltDatagrama = 0
     ipProtocolo = ""
@@ -137,6 +138,7 @@ function armarFrame(ltDatagrama,numIdentificacion,df,mf,desplazamiento,tiempovid
 // Flags    0dfmf + desplazamiento 
     //En esta caso, la fragmentación y demas vienen desde afuera, y primero se debe hacer la parte binaria
     flags = "0"+df+mf
+    console.log("Flags ", flags)
     desplazamientoBin = desplazamiento.toString(2)
 
     if (desplazamientoBin.length < 13) {
@@ -144,8 +146,10 @@ function armarFrame(ltDatagrama,numIdentificacion,df,mf,desplazamiento,tiempovid
     }
 
     desplazamientoBin = flags + desplazamientoBin
+    /*console.log("Desplazamiento Bin ", desplazamientoBin)*/
     //Con la parte binaria completa, ahora si se puede pasar a Hexa
     desplazamientoHex = parseInt(desplazamientoBin,2).toString(16)
+    /*console.log("Desplazamiento Hexa ", desplazamientoHex)*/
 
     if (desplazamientoHex.length < 4) {
         desplazamientoHex = agregarDigitoFaltante(desplazamientoHex,4-desplazamientoHex.length)
@@ -205,6 +209,7 @@ function armarFrame(ltDatagrama,numIdentificacion,df,mf,desplazamiento,tiempovid
     }
 
     sumaComprobacion = encontrarSumaComprobacion(frameHexa+dirIpOrigenHex+dirIpDestinoHex)
+    console.log("Suma de Comprobación", sumaComprobacion)
     frameHexa += "-" + sumaComprobacion
     frameBinario+= "-"+ parseInt(sumaComprobacion,16).toString(16)
 
@@ -318,6 +323,110 @@ function restarHexadecimal(hexa, hexb) {
     hexaTotal = hexaTotal.toString(16);
     return hexaTotal
 }
+/**
+ * Método que cumple la función de procesar y mostrar los datos en la segunda sección de la página
+ */
+function guardarD(){
+    //Se obtiene los datos ingresados por el usuario
+    var uTransferencia = document.getElementById("unidadMaxima").value
+    var ltDatagrama = document.getElementById("longitudTotal").value
+    var ipProtocolo = document.getElementById("tipoProtocolo").value
+    var dirIpOrigen = document.getElementById("direccionOrigen").value
+    var dirIpDestino = document.getElementById("direccionDestino").value
+
+    //Se comienza a mostrar los datos en la segunda sección de la página
+    document.getElementById('ipOrigen').innerHTML = dirIpOrigen
+    document.getElementById('ipOrigen1').innerHTML = dirIpOrigen
+    document.getElementById('ipDestino').innerHTML = dirIpDestino
+    document.getElementById('ipDestino1').innerHTML = dirIpDestino
+
+    //Como el tipo de protocolo puede tener tres opciones se realiza una verificación del dato
+    //ingresado por el usuario y de acuerdo a esto se muestra una información determinada
+    if(ipProtocolo == "1"){
+        document.getElementById('protocolo').innerHTML = "Protoloco ICMP"
+        document.getElementById('protocoloo').innerHTML = "Protoloco: ICMP (1)"
+    }
+    if(ipProtocolo == "2"){
+        document.getElementById('protocolo').innerHTML = "Protoloco TCP"
+        document.getElementById('protocoloo').innerHTML = "Protoloco: TCP (6)"
+    }
+    if(ipProtocolo == "3"){
+        document.getElementById('protocolo').innerHTML = "Protoloco UDP"
+        document.getElementById('protocoloo').innerHTML = "Protoloco: UDP (17)"
+    }
+
+    // Tanto el número de identificación como el timepo de vida son valores aleatorios
+    //Por lo que se generan e inmediatamente se muestran en la segunda sección de la página
+    var numIdentificacion = Math.floor(Math.random() * (65536 + 1))
+    document.getElementById('numeroIdentificacion').innerHTML = numIdentificacion.toString(16) + " (" + numIdentificacion + ")"
+    var tiempovida = Math.floor(Math.random() * (256 + 1))
+    document.getElementById('tiempovida').innerHTML = tiempovida
+
+    //Para mostrar la suma de comprobación y el desplazamiento se tienen en cuenta el frame que retorna el método
+    //de armarFrame, tanto en hexadecimal como en binario
+    frame = armarFrame(ltDatagrama,numIdentificacion,0,1,0,tiempovida,ipProtocolo,dirIpOrigen,dirIpDestino)
+    frameH = frame.split(':')
+    //Para la suma de comprobación se tiene en cuenta el frame en hexadecimal, especificamente la posición 7 del arreglo
+    suma = frameH[0].split('-')[7]
+    document.getElementById('checksum').innerHTML = suma
+
+    //El desplazamiento se obtine por medio del frame en binario, realizando un split '-', obteniendo el arreglo en la
+    //posición 5 y solo obteniendo los números a partir de la posición 4 de la cadena
+    desplazamiento = frameH[1].split('-')[5].substring(4)
+    //Luego de obtener el desplazamiento en binario se convierte este número en decimal, para posteriormente
+    //mostrar el dato en el offset
+    desplazamientodecimal = parseInt(desplazamiento, 2)
+    document.getElementById('fragmentoffset').innerHTML = desplazamientodecimal
+    
+    //Método que funciona para mostrar toda la sección de flags
+    mostrarFlags(ltDatagrama,numIdentificacion,tiempovida,ipProtocolo,dirIpOrigen,dirIpDestino)
+}
+/**
+ * Método que sirve para mostrar en la segunda sección de la página la información de los flags
+ * @param {Decimal} ltDatagrama La longitud de datagrama
+ * @param {Decimal} numIdentificacion Numero de indentificación del datagrama
+ * @param {Decimal} tiempovida Tiempo de Vida del datagrama
+ * @param {Decimal} ipProtocolo Protocolo ip usado por el datagrama
+ * @param {Decimal} dirIpOrigen Dirección ip origen del datagrama
+ * @param {Decimal} dirIpDestino Dirección ip destino del datagrama
+ */
+function mostrarFlags(ltDatagrama,numIdentificacion,tiempovida,ipProtocolo,dirIpOrigen,dirIpDestino){
+    //Se hace el llamado al método armarFrame para obtener tanto el frame en hexadecimal como binario
+    frame = armarFrame(ltDatagrama,numIdentificacion,0,1,0,tiempovida,ipProtocolo,dirIpOrigen,dirIpDestino)
+    frameB = frame.split(':')
+    //Se obtiene del frame binario la posición del arreglo 5 el cual corresponde a los frag
+    flag = frameB[1].split('-')[5]
+    //El don't fragment se encuentra en la posición 2 de la cadena de flags
+    dontFragment = flag.substring(1, 2)
+    //El more fragments se encuentra en la posición 3 de la cadena de flags
+    moreFragment = flag.substring(2, 3)
+
+    //Se puede presentar el caso en el que el don't fragment sea 1 y 0, por lo que dependiendo del número
+    //se coloca la información correspondiente
+    if(dontFragment == "1"){
+        document.getElementById('dontfragment').innerHTML = "." + dontFragment + ".. .... = Don't fragment: Set"
+    }
+    if(dontFragment == "0"){
+        document.getElementById('dontfragment').innerHTML = "." + dontFragment + ".. .... = Don't fragment: Not set"
+    }
+
+    //Se puede presentar el caso en el que el more fragments sea 1 y 0, por lo que dependiendo del número
+    //se coloca la información correspondiente
+    if(moreFragment == "1"){
+        document.getElementById('morefragments').innerHTML = ".." + moreFragment + ". .... = Don't fragment: Set"
+    }
+    if(moreFragment == "0"){
+        document.getElementById('morefragments').innerHTML = ".." + moreFragment + ". .... = Don't fragment: Not set"
+    }
+}
+var frame
+function pintarDatagramaH(){ 
+    document.getElementById('ipHexadecimal').innerHTML = frame.split(':')[0]
+}
+function pintarDatagramaB(){
+    document.getElementById('ipBinario').innerHTML = frame.split(':')[1]
+}
+//guardarD()
 //ejemplo()
 /*
 sumaComrobacion= encontrarSumaComprobacion("45000224cc3400b94001c0a802e3c0a802de")
@@ -335,5 +444,4 @@ frameHexa = "0A"
 frameBin = "01010"
 frameBinario = parseInt(frameHexa,16).toString(2)
 frameHexadecimal = parseInt(frameBin,2).toString(16)
-console.log(frameBinario, " Hexa ",frameHexadecimal)
-*/
+console.log(frameBinario, " Hexa ",frameHexadecimal)*/

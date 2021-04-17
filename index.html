@@ -20,37 +20,42 @@
     <section>
         <h2 class="titulo"> Ingreso de datos </h2>
 
-        <form action="" class="formulario">
+        <form action="" class="container">
             <fieldset>
-                <legend class="formulario"> Ingresa los siguientes datos </legend>
+                <legend> Completa los siguientes campos </legend>
 
                 <div>
-                    <label for=""> Unidad máxima de transferencia de la red </label>
-                    <input type="text" placeholder="Unidad Máxima">
+                    <label for="" class="col-sm-4 col-form-label"> Unidad máxima de transferencia de la red </label>
+                    <input class="ingreso" type="text" placeholder="Unidad Máxima" id="unidadMaxima" name="unidadMaxima">
                 </div>
 
                 <div>
-                    <label for=""> Longitud total del datagrama </label>
-                    <input type="text" placeholder="Longitud Total">
+                    <label for="" class="col-sm-4 col-form-label"> Longitud total del datagrama </label>
+                    <input class="ingreso" type="text" placeholder="Longitud Total" id="longitudTotal" name="longitudTotal">
                 </div>
 
                 <div>
-                    <label for=""> Protocolo de nivel superior </label>
-                    <input type="text" placeholder="Protocolo">
+                    <label for="" class="col-sm-4 col-form-label"> Protocolo de nivel superior </label>
+                    <select type="form-select" style='width:245px; height:32px' id="tipoProtocolo" name="tipoProtocolo">
+                        <option selected> Seleccione el Protocolo </option>
+                        <option value="1"> ICMP </option>
+                        <option value="2"> TCP </option>
+                        <option value="3"> UDP </option>
+                    </select>
                 </div>
 
                 <div>
-                    <label for=""> Dirección IP de origen </label>
-                    <input type="text" placeholder="Dirección Origen">
+                    <label for="" class="col-sm-4 col-form-label"> Dirección IP de origen </label>
+                    <input class="ingreso" type="text" placeholder="Dirección Origen" id="direccionOrigen" name="direccionOrigen">
                 </div>
 
                 <div>
-                    <label for=""> Dirección IP de destino </label>
-                    <input type="text" placeholder="Dirección Destino">
+                    <label for="" class="col-sm-4 col-form-label"> Dirección IP de destino </label>
+                    <input class="ingreso" type="text" placeholder="Dirección Destino" id="direccionDestino" name="direccionDestino">
                 </div>
 
                 <div>
-                    <input type="submit" name="" id="" value="Guardar Datos">
+                    <input class="btn btn-outline-dark" type="button" name="guardar" id="guardar" value="Procesar Datos" onclick="guardarD()">
                 </div>
             </fieldset>
         </form>
@@ -58,78 +63,95 @@
 
     <section>
         <h2 class="titulo"> Información completa de datos </h2>
-
         <div class="container">
             <div class="accordion" id="accordionExample">
                 <div class="accordion-item">
-                    <h2 class="accordion-header" id="headingOne">
-                        <button class="accordion-button" type="button" data-bs-toggle="collapse"
-                            data-bs-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
-                            Accordion Item #1
-                        </button>
-                    </h2>
-                    <div id="collapseOne" class="accordion-collapse collapse show" aria-labelledby="headingOne"
-                        data-bs-parent="#accordionExample">
-                        <div class="accordion-body">
-                            <strong>This is the first item's accordion body.</strong> It is hidden by default, until the
-                            collapse plugin adds the appropriate classes that we use to style each element. These
-                            classes
-                            control the overall appearance, as well as the showing and hiding via CSS transitions. You
-                            can
-                            modify any of this with custom CSS or overriding our default variables. It's also worth
-                            noting
-                            that just about any HTML can go within the <code>.accordion-body</code>, though the
-                            transition
-                            does limit overflow.
-                        </div>
+                  <h2 class="accordion-header" id="headingOne">
+                    <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
+                        Ethernet II
+                    </button>
+                  </h2>
+                  <div id="collapseOne" class="accordion-collapse collapse show" aria-labelledby="headingOne" data-bs-parent="#accordionExample">
+                    <div class="accordion-body">
+                      <strong>This is the first item's accordion body.</strong> It is hidden by default, until the collapse plugin adds the appropriate classes that we use to style each element. These classes control the overall appearance, as well as the showing and hiding via CSS transitions. You can modify any of this with custom CSS or overriding our default variables. It's also worth noting that just about any HTML can go within the <code>.accordion-body</code>, though the transition does limit overflow.
                     </div>
+                  </div>
                 </div>
                 <div class="accordion-item">
-                    <h2 class="accordion-header" id="headingTwo">
-                        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
-                            data-bs-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
-                            Accordion Item #2
-                        </button>
-                    </h2>
-                    <div id="collapseTwo" class="accordion-collapse collapse" aria-labelledby="headingTwo"
-                        data-bs-parent="#accordionExample">
-                        <div class="accordion-body">
-                            <strong>This is the second item's accordion body.</strong> It is hidden by default, until
-                            the
-                            collapse plugin adds the appropriate classes that we use to style each element. These
-                            classes
-                            control the overall appearance, as well as the showing and hiding via CSS transitions. You
-                            can
-                            modify any of this with custom CSS or overriding our default variables. It's also worth
-                            noting
-                            that just about any HTML can go within the <code>.accordion-body</code>, though the
-                            transition
-                            does limit overflow.
+                  <h2 class="accordion-header" id="headingTwo">
+                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
+                        Internet Protocol Version 4, Src: <label id="ipOrigen"></label>, Dst: <label id="ipDestino"></label>
+                    </button>
+                  </h2>
+                  <div id="collapseTwo" class="accordion-collapse collapse" aria-labelledby="headingTwo" data-bs-parent="#accordionExample">
+                    <div class="accordion-body">
+                        <p align="left">
+                            0100 .... = Version: 4 <br/>
+                            .... 0101 = Header Lenght: 20 bytes (5)
+                        </p>
+                        <div class="accordion accordion-flush" id="accordionFlushExample">
+                            <div class="accordion-item">
+                              <h2 class="accordion-header" id="flush-headingOne">
+                                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#flush-collapseOne" aria-expanded="false" aria-controls="flush-collapseOne">
+                                    Differentiated Services Field: 0x00 (DSCP: CS0, ECN: Not-ECT)
+                                </button>
+                              </h2>
+                              <div id="flush-collapseOne" class="accordion-collapse collapse" aria-labelledby="flush-headingOne" data-bs-parent="#accordionFlushExample">
+                                <div class="accordion-body">
+                                    <p align="left">
+                                        0000 00.. = Differentiated Services Codepoint: Default (0) <br/>
+                                        .... ..00 = Explicit Congestion Notification: Not ECN-Capable Transport (0)
+                                    </p>
+                                </div>
+                                </div>
+                            </div>
                         </div>
+                        <p align="left">
+                            Total Length: # <br/>
+                            Identification: 0x<label id="numeroIdentificacion"></label> <br/>
+                        </p>
+                        <div class="accordion accordion-flush" id="accordionFlushExample">
+                            <div class="accordion-item">
+                              <h2 class="accordion-header" id="flush-headingOne">
+                                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#flush-collapseOne" aria-expanded="false" aria-controls="flush-collapseOne">
+                                    Flags:
+                                </button>
+                              </h2>
+                              <div id="flush-collapseOne" class="accordion-collapse collapse" aria-labelledby="flush-headingOne" data-bs-parent="#accordionFlushExample">
+                                <div class="accordion-body">
+                                    <p align="left">
+                                        0... .... = Reserved bit: Not set <br/>
+                                        <label id="dontfragment"></label> <br/>
+                                        <label id="morefragments"></label>
+                                    </p>
+                                </div>
+                                </div>
+                            </div>
+                        </div>
+                        <p align="left">
+                            Fragment Offset: <label id="fragmentoffset"></label> <br/>
+                            Time to Live: <label id="tiempovida"></label> <br/>
+                            <label id="protocoloo"></label> <br/>
+                            Header Checksum: 0x<label id="checksum"></label> [validation disabled] </br>
+                            [Header checksum status: Unverified] </br>
+                            Source Address: <label id="ipOrigen1"></label> </br>
+                            Destination Address: <label id="ipDestino1"></label>
+                        </p>
                     </div>
+                  </div>
                 </div>
                 <div class="accordion-item">
-                    <h2 class="accordion-header" id="headingThree">
-                        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
-                            data-bs-target="#collapseThree" aria-expanded="false" aria-controls="collapseThree">
-                            Accordion Item #3
-                        </button>
-                    </h2>
-                    <div id="collapseThree" class="accordion-collapse collapse" aria-labelledby="headingThree"
-                        data-bs-parent="#accordionExample">
-                        <div class="accordion-body">
-                            <strong>This is the third item's accordion body.</strong> It is hidden by default, until the
-                            collapse plugin adds the appropriate classes that we use to style each element. These
-                            classes
-                            control the overall appearance, as well as the showing and hiding via CSS transitions. You
-                            can
-                            modify any of this with custom CSS or overriding our default variables. It's also worth
-                            noting
-                            that just about any HTML can go within the <code>.accordion-body</code>, though the
-                            transition
-                            does limit overflow.
-                        </div>
+                  <h2 class="accordion-header" id="headingThree">
+                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseThree" aria-expanded="false" aria-controls="collapseThree">
+                        <label id="protocolo"></label>
+                    </button>
+                  </h2>
+                  <div id="collapseThree" class="accordion-collapse collapse" aria-labelledby="headingThree" data-bs-parent="#accordionExample">
+                    <div class="accordion-body">
+                      <strong>This is the third item's accordion body.</strong> It is hidden by default, until the collapse plugin adds the appropriate classes that we use to style each element. These classes control the overall appearance, as well as the showing and hiding via CSS transitions. You can modify any of this with custom CSS or overriding our default variables. It's also worth noting that just about any HTML can go within the <code>.accordion-body</code>, though the transition does limit overflow.
                     </div>
+                  </div>
+                </div>
                 </div>
             </div>
         </div>
@@ -137,10 +159,14 @@
 
     <section>
         <h2 class="titulo"> Formatos de Datagramas IPv4 </h2>
-
-        <div class="btn-group" role="group" aria-label="Basic example">
-            <button type="button" class="btn btn-primary"> Binario </button>
-            <button type="button" class="btn btn-primary"> Hexadecimal </button>
+        
+        <div class="btn-group" role="group" aria-label="Basic outlined example">
+            <input type="button" class="btn btn-outline-dark" name="Binario" id="Bina" value="Binario" onclick="pintarDatagramaH()"> 
+            <input type="button" class="btn btn-outline-dark" name="Hexadecimal" id="Hexa" value="Hexadecimal" onclick="pintarDatagramaB()" >
+        </div>
+        <div class="container">
+            <label id="ipHexadecimal"></label> </br>
+            <label id="ipBinario"></label>
         </div>
     </section>
 
@@ -149,5 +175,5 @@
     integrity="sha384-JEW9xMcG8R+pH31jmWH6WWP0WintQrMb4s7ZOdauHnUtxwoG2vI5DkLtS3qm9Ekf"
     crossorigin="anonymous"></script>
 <script src="./js/logica.js"></script>
-
+<script type="text/javascript"></script>
 </html>

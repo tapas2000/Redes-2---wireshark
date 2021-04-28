@@ -32,7 +32,7 @@ function ejemplo() {
     // La función floor, redondea números decimales
     numIdentificacion = Math.floor(Math.random() * (65536 + 1))
     tiempovida = Math.floor(Math.random() * (256 + 1))
-    console.log("Num ide:  ", numIdentificacion, " tiempovida: ", tiempovida)
+    //console.log("Num ide:  ", numIdentificacion, " tiempovida: ", tiempovida)
 
     /*
     Valores a calcular:
@@ -48,6 +48,7 @@ function ejemplo() {
     45-00-ltDatagrama-[numIdentificacion]-flags-dezplazamiento-[tiempovida]-ipProtocolo-sumadecomprobación-dirIpOrigen-dirIpDestino
     */
 }
+
 /**
  * Metodo que divide un Frame deacuerdo a la cantidad de mtu que se necesite
  * @param {int} mtu Es el número maximo de tranferencia
@@ -75,16 +76,13 @@ function dividirFrame(mtu, ltDatagrama, numIdentificacion, tiempovida, ipProtoco
     //Le restamos el restante a ltDatagrama obtener las parte enteras de la división
     let limite = (ltDatagrama - sobrante) / (mtu - 20)
 
-
     //Se define var ya que el parametro i se utiliza en diferentes partes del progama, javascript lo tomoa igual si no se usa var
     let i = 1
 
     //Se verifica si la logitud del datagrama es mayor que el unidad maximade transferencia - 20
     if (ltDatagrama > (mtu - 20)) {
-
         //Hacemos tantas veces quepa la unidad de transferencia en la longitud del datagrama
         while (i <= limite) {
-
             // verificamos si resulta que cabe perfectamente en el frame, por ende el ultimo frame sus banderas seran 000
             if (i==limite && sobrante == 0) {
                 frameTotales.push(armarFrame(mtu, numIdentificacion, 0, 0, despAux, tiempovida, ipProtocolo, dirIpOrigen, dirIpDestino))
@@ -95,7 +93,6 @@ function dividirFrame(mtu, ltDatagrama, numIdentificacion, tiempovida, ipProtoco
                 //Se calcula el dezplazamiento deacuerdo al anterior frame
                 despAux = (mtu) * i
             }
-
         }
 
         //En caso de que haya datos faltantes
@@ -106,7 +103,6 @@ function dividirFrame(mtu, ltDatagrama, numIdentificacion, tiempovida, ipProtoco
 
     } else if (ltDatagrama == (mtu - 20)) {
         //Se calcula el valor restante necesitado para completar el frame
-
         frameTotales.push(armarFrame(mtu, numIdentificacion, 1, 0, despAux, tiempovida, ipProtocolo, dirIpOrigen, dirIpDestino))
     }
     else {
@@ -115,6 +111,7 @@ function dividirFrame(mtu, ltDatagrama, numIdentificacion, tiempovida, ipProtoco
     }
     return frameTotales
 }
+
 /**
  * Metodo que estructura un Frame dado los atributos del mismo en decimal
  * @param {Decimal} ltDatagrama La longitud de datagrama
@@ -135,7 +132,7 @@ function armarFrame(ltDatagrama, numIdentificacion, df, mf, desplazamiento, tiem
     // Longitud del datagrama - 16 bits - 4 hexa 
     ltDatagramaHex = ltDatagrama.toString(16)
     ltDatagramaBin = ltDatagrama.toString(2)
-    console.log("Desde el programa inicio : ", ltDatagrama, " sale ", ltDatagramaHex)
+    //console.log("Desde el programa inicio : ", ltDatagrama, " sale ", ltDatagramaHex)
     // console.log("Frame Hexa : ",ltDatagramaHex, " Frame Binario : ", ltDatagramaBin)
     // Cada que hace una tranformación en base n, los 0 a la izquiera son ignorados, por eso, se deben agregar a mano 
     if (ltDatagramaHex.length < 4) {
@@ -165,7 +162,7 @@ function armarFrame(ltDatagrama, numIdentificacion, df, mf, desplazamiento, tiem
     // Flags    0dfmf + desplazamiento 
     //En esta caso, la fragmentación y demas vienen desde afuera, y primero se debe hacer la parte binaria
     flags = "0" + df + mf
-    console.log("Flags ", flags)
+    //console.log("Flags ", flags)
     desplazamientoBin = desplazamiento.toString(2)
 
     if (desplazamientoBin.length < 13) {
@@ -236,7 +233,7 @@ function armarFrame(ltDatagrama, numIdentificacion, df, mf, desplazamiento, tiem
     }
 
     sumaComprobacion = encontrarSumaComprobacion(frameHexa + dirIpOrigenHex + dirIpDestinoHex)
-    console.log("Suma de Comprobación", sumaComprobacion)
+    //console.log("Suma de Comprobación", sumaComprobacion)
     frameHexa += "-" + sumaComprobacion
     frameBinario += "-" + parseInt(sumaComprobacion, 16).toString(2)
 
@@ -246,6 +243,7 @@ function armarFrame(ltDatagrama, numIdentificacion, df, mf, desplazamiento, tiem
     //console.log("Frame Hexa : ",frameHexa, " Frame Binario : ", frameBinario)
     return frameHexa + ":" + frameBinario
 }
+
 /**
  * Metodo que agrega ceros a la izquierda a una cadena, n o "limite" veces
  * @param {*} cadena Es el String que se le piensa agregar los 0
@@ -260,13 +258,13 @@ function agregarDigitoFaltante(cadena, limite) {
 
     return cadena
 }
+
 /**
  * Metodo que calcula la suma de comprobación  y lo retorna en binario
  * @param {String(16)} cabecera Es la cadena de numeros hexadecimales para realializar la suma de comprobacion
  * @returns La suma de comprobación en hexadecimal
  */
 function encontrarSumaComprobacion(cabecera) {
-
     /* 
     El siguiente cadena de numeros es un ejemplo de como se espera que sea cabecera
     los numeros de arriba indican el indice donde estan parados y como en toda cabecera,
@@ -328,9 +326,10 @@ function transformardireccion(direccion) {
     var dividirDir = direccion.split(".")
 
     cadenaBin = parseInt(dividirDir[0]).toString(2) + parseInt(dividirDir[1]).toString(2) + parseInt(dividirDir[2]).toString(2) + parseInt(dividirDir[3]).toString(2)
-    console.log(cadenaBin)
+    //console.log(cadenaBin)
     return parseInt(cadenaBin, 2)
 }
+
 /**
  * Metodo que dados dos grupos de numeros hexadecimales los suma
  * @param {String(16)} hexa Es el primer grupo de 4 hexadecimales que se desea sumar
@@ -347,6 +346,7 @@ function sumarHexadecimal(hexa, hexb) {
     hexaTotal = hexaTotal.toString(16)
     return hexaTotal
 }
+
 /**
 * Metodo que dados dos grupos de numeros hexadecimales los resta
 * @param {String(16)} hexa Es el primer grupo de 4 hexadecimales que se desea restar
@@ -363,6 +363,7 @@ function restarHexadecimal(hexa, hexb) {
     hexaTotal = hexaTotal.toString(16);
     return hexaTotal
 }
+
 /**
  * Metodo que genera una tabla de acuerdo a la cantidad de Frames obtenidos
  * @param {String[]} frames Es un arreglo donde estan todos los frames
@@ -386,7 +387,9 @@ function generar_tabla(frames) {
         hilera.setAttribute("onClick", "pintarFrameIndividual(" + i + ")")
 
         // Obtener información de los frames
-        var frame = frames[i].split(":")
+        //var frame = frames[i].split(":")
+        var frame = pintarData(frames[i].split(":")[0])
+        //console.log("frame " + frame)
 
         for (var j = 0; j < 2; j++) {
             if (j == 0) {
@@ -402,17 +405,14 @@ function generar_tabla(frames) {
                 // texto sea el contenido de <td>, ubica el elemento <td> al final
                 // de la hilera de la tabla
                 var celda = document.createElement("td");
-                var textoCelda = document.createTextNode(frame[0]);
+                var textoCelda = document.createTextNode(frame);
                 celda.appendChild(textoCelda);
                 hilera.appendChild(celda);
             }
-
         }
-
         // agrega la hilera al final de la tabla (al final del elemento tblbody)
         tblBody.appendChild(hilera);
     }
-
     // posiciona el <tbody> debajo del elemento <table>
     tabla.appendChild(tblBody);
     // appends <table> into <body>
@@ -430,6 +430,7 @@ function pintarFrameIndividual(indice) {
     indiceGlobal = indice
     pintarDatos(frameGlobal, indice)
 }
+
 /**
  * Método que cumple la función de procesar y mostrar los datos en la segunda sección de la página
  */
@@ -447,21 +448,6 @@ function guardarD() {
     document.getElementById('ipDestino').innerHTML = dirIpDestino
     document.getElementById('ipDestino1').innerHTML = dirIpDestino
 
-    //Como el tipo de protocolo puede tener tres opciones se realiza una verificación del dato
-    //ingresado por el usuario y de acuerdo a esto se muestra una información determinada
-    if (ipProtocolo == "1") {
-        document.getElementById('protocolo').innerHTML = "Protoloco ICMP"
-        document.getElementById('protocoloo').innerHTML = "Protoloco: ICMP (1)"
-    }
-    if (ipProtocolo == "2") {
-        document.getElementById('protocolo').innerHTML = "Protoloco TCP"
-        document.getElementById('protocoloo').innerHTML = "Protoloco: TCP (6)"
-    }
-    if (ipProtocolo == "3") {
-        document.getElementById('protocolo').innerHTML = "Protoloco UDP"
-        document.getElementById('protocoloo').innerHTML = "Protoloco: UDP (17)"
-    }
-
     // Tanto el número de identificación como el timepo de vida son valores aleatorios
     //Por lo que se generan e inmediatamente se muestran en la segunda sección de la página
     var numIdentificacion = Math.floor(Math.random() * (65536 + 1))
@@ -469,12 +455,8 @@ function guardarD() {
     var tiempovida = Math.floor(Math.random() * (256 + 1))
     document.getElementById('tiempovida').innerHTML = tiempovida
 
-    //Para mostrar la suma de comprobación y el desplazamiento se tienen en cuenta el frame que retorna el método
-    //de armarFrame, tanto en hexadecimal como en binario
-
     dirIpOrigenCompleta = transformardireccion(dirIpOrigen)
     dirIpDestinoCompleta = transformardireccion(dirIpDestino)
-
 
     frame = dividirFrame(uTransferencia, ltDatagrama, numIdentificacion, tiempovida, ipProtocolo, dirIpOrigenCompleta, dirIpDestinoCompleta)
     generar_tabla(frame)
@@ -482,13 +464,13 @@ function guardarD() {
     // Guardar variables globales
     frameGlobal = frame
 
-    console.log("Resultadod de dividir frame: ", frame)
-
+    //console.log("Resultadod de dividir frame: ", frame)
 }
+
 /**
- * 
- * @param {*} frame 
- * @param {*} indice 
+ * Método que muestra datos como la suma de comprobación, el desplazamiento y el total length
+ * @param {*} frame Hace referencia al frame resultante tanto hexadecimal como binario
+ * @param {*} indice Es el índice del frame que se ha seleccionado para observar diferentes datos
  */
 function pintarDatos(frame, indice) {
 
@@ -507,10 +489,27 @@ function pintarDatos(frame, indice) {
 
     //Método que funciona para mostrar toda la sección de flags
     mostrarFlags(frame, indice)
+
+    //Total length
+    dataHexadecimal = frameGlobal[indiceGlobal].split(':')[0]
+    data = ""
+    //Del frame hexadecimal se debe quitar los carácteres iguales a "-"
+    for(i = 0; i < dataHexadecimal.length; i++){
+        if(dataHexadecimal[i] != "-"){
+            data += dataHexadecimal[i]
+        }
+    }
+    //El total length se encuentra en la posición 4 a la 8 del frame hexadecimal
+    totalLengthH = data.substring(4,8)
+    //Luego de tener solo los 4 dígitos del frame hexadecimal, este valor se convierte en decimal
+    totalLengthD = parseInt(totalLengthH, 16)
+    //Finalmente se pinta en el campo correspondiente
+    document.getElementById("totalLength").innerHTML = totalLengthD
 }
+
 /**
  * Método que sirve para mostrar en la segunda sección de la página la información de los flags
- * @param {String} frame
+ * @param {String} frame Hace referencia al frame resultante tanto hexadecimal como binario
  */
 function mostrarFlags(frame, indice) {
     //Se hace el llamado al método armarFrame para obtener tanto el frame en hexadecimal como binario
@@ -541,28 +540,60 @@ function mostrarFlags(frame, indice) {
     }
 }
 
+/**
+ * Método que se encarga de quitar los "-" del frame y pintarlos en el campo correspondiente. Se tiene en cuenta
+ * que los dígitos van de par en par
+ * @param {*} frame Hace referencia al frame resultante tanto hexadecimal como binario
+ * @returns El frame organizado de par en par sin carácteres "-"
+ */
+function pintarData(frame){
+    data = ""
+    //Del frame hexadecimal se debe quitar los carácteres iguales a "-"
+    for(i = 0; i < frame.length; i++){
+        if(frame[i] != "-"){
+            data += frame[i]
+        }
+    }
+
+    dataFinal = ""
+    //Se arregla el frame de hexadecimal de manera que quede organizado de par en par
+    for(i = 0; i < data.length; i += 2){
+        dataFinal += data.substring(i, i + 2) + " "
+    }
+
+    return dataFinal
+}
+
+/**
+ * Método que se encarga de pintar un frame hexadecimal de manera que se vea organziado de par en par de dígitos y sin "-"
+ * Solo para el frame de tipo Hexadecimal
+ */
 function pintarDatagramaH() {
-    document.getElementById('ipHexadecimal').innerHTML = frameGlobal[indiceGlobal].split(':')[0]
+    dataH = frameGlobal[indiceGlobal].split(':')[0]
+    
+    document.getElementById('ipHexadecimal').innerHTML = pintarData(dataH)
 }
+
+/**
+ * Método que se encarga de pintar un frame hexadecimal de manera que se vea organziado de ocho en ocho dígitos y sin "-"
+ * Solo para el frame de tipo binario
+ */
 function pintarDatagramaB() {
-    document.getElementById('ipHexadecimal').innerHTML = frameGlobal[indiceGlobal].split(':')[1]
+    dataB = frameGlobal[indiceGlobal].split(':')[1]
+    
+    data = ""
+    //Del frame hexadecimal se debe quitar los carácteres iguales a "-"
+    for(i = 0; i < dataB.length; i++){
+        if(dataB[i] != "-"){
+            data += dataB[i]
+        }
+    }
+    
+    dataFinal = ""
+    //Se arregla el frame binario de manera que quede organizado de ocho en ocho
+    for(i = 0; i < data.length; i += 8){
+        dataFinal += data.substring(i, i + 8) + " "
+    }
+
+    document.getElementById('ipHexadecimal').innerHTML = dataFinal
 }
-//guardarD()
-//ejemplo()
-/*
-sumaComrobacion= encontrarSumaComprobacion("45000224cc3400b94001c0a802e3c0a802de")
-console.log(sumaComrobacion)
-*/
-
-//ltDatagrama,numIdentificacion,df,mf,desplazamiento,tiempovida,ipProtocolo,dirIpOrigen,dirIpDestino
-//armarFrame(548,52276,0,0,185,64,1,3232236259,3232236254)
-
-//mtu,ltDatagrama,numIdentificacion,tiempovida,ipProtocolo,dirIpOrigen,dirIpDestino
-//dividirFrame(1500,5000,0,64,1,3232236259,3232236254)
-
-/*
-frameHexa = "0A"
-frameBin = "01010"
-frameBinario = parseInt(frameHexa,16).toString(2)
-frameHexadecimal = parseInt(frameBin,2).toString(16)
-console.log(frameBinario, " Hexa ",frameHexadecimal)*/

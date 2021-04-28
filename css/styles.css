@@ -6,6 +6,8 @@
 
 .titulo {
     text-align: center;
+    font-family: 'Courier New', Courier, monospace;
+    font-weight: bold;
 }
 
 .btn-group {
@@ -24,6 +26,7 @@
     border: 2px solid var(--bordeadocontainer);
     text-align: center;
     background-color: var(--containerfondo);
+    font-family: 'Courier New', Courier, monospace;
 }
 
 .btn-group a {
@@ -42,4 +45,9 @@
     body {
         background-color: var(--fondo);
     }
+}
+
+.text-center {
+    font-family: 'Courier New', Courier, monospace;
+    font-weight: bold;
 }

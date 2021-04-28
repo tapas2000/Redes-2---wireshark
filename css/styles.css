@@ -51,3 +51,9 @@
     font-family: 'Courier New', Courier, monospace;
     font-weight: bold;
 }
+
+div.btn-group {
+    width: 33.33%;
+    display: flex;
+    justify-content: center
+}

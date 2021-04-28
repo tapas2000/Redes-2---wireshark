@@ -91,7 +91,7 @@ function dividirFrame(mtu, ltDatagrama, numIdentificacion, tiempovida, ipProtoco
                 frameTotales.push(armarFrame(mtu, numIdentificacion, 0, 1, despAux, tiempovida, ipProtocolo, dirIpOrigen, dirIpDestino))
                 i = 1 + i
                 //Se calcula el dezplazamiento deacuerdo al anterior frame
-                despAux = (mtu) * i
+                despAux = (mtu) * (i - 1)
             }
         }
 
@@ -211,25 +211,19 @@ function armarFrame(ltDatagrama, numIdentificacion, df, mf, desplazamiento, tiem
     frameBinario += "-" + ipProtocoloBin
 
     // Dirección ip origen 
-    dirIpOrigenHex = dirIpOrigen.toString(16)
-    dirIpOrigenBin = dirIpOrigen.toString(2)
+    dirIpOrigenHex = dirIpOrigen
+    dirIpOrigenBin = parseInt(dirIpOrigen, 16).toString(2)
 
-    if (dirIpOrigenHex.length < 8) {
-        dirIpOrigenHex = agregarDigitoFaltante(dirIpOrigenHex, 8 - dirIpOrigenHex.length)
-    }
-    if (dirIpOrigenBin.length < 32) {
-        dirIpOrigenBin = agregarDigitoFaltante(dirIpOrigenBin, 32 - dirIpOrigenBin.length)
+    if (dirIpOrigenBin.length < 16) {
+        dirIpOrigenBin = agregarDigitoFaltante(dirIpOrigenBin, 16 - dirIpOrigenBin.length)
     }
 
     // Dirección ip destino 
-    dirIpDestinoHex = dirIpDestino.toString(16)
-    dirIpDestinoBin = dirIpDestino.toString(2)
+    dirIpDestinoHex = dirIpDestino
+    dirIpDestinoBin = parseInt(dirIpDestino, 16).toString(2)
 
-    if (dirIpDestinoHex.length < 8) {
-        dirIpDestinoHex = agregarDigitoFaltante(dirIpDestinoHex, 8 - dirIpDestinoHex.length)
-    }
-    if (dirIpDestinoBin.length < 32) {
-        dirIpDestinoBin = agregarDigitoFaltante(dirIpDestinoBin, 32 - dirIpDestinoBin.length)
+    if (dirIpDestinoBin.length < 16) {
+        dirIpDestinoBin = agregarDigitoFaltante(dirIpDestinoBin, 16 - dirIpDestinoBin.length)
     }
 
     sumaComprobacion = encontrarSumaComprobacion(frameHexa + dirIpOrigenHex + dirIpDestinoHex)
@@ -240,7 +234,7 @@ function armarFrame(ltDatagrama, numIdentificacion, df, mf, desplazamiento, tiem
     frameHexa += "-" + dirIpOrigenHex + "-" + dirIpDestinoHex
     frameBinario += "-" + dirIpOrigenBin + "-" + dirIpDestinoBin
 
-    //console.log("Frame Hexa : ",frameHexa, " Frame Binario : ", frameBinario)
+    console.log("Frame Hexa : ",frameHexa)
     return frameHexa + ":" + frameBinario
 }
 
@@ -324,10 +318,15 @@ function encontrarSumaComprobacion(cabecera) {
 function transformardireccion(direccion) {
 
     var dividirDir = direccion.split(".")
-
-    cadenaBin = parseInt(dividirDir[0]).toString(2) + parseInt(dividirDir[1]).toString(2) + parseInt(dividirDir[2]).toString(2) + parseInt(dividirDir[3]).toString(2)
+    var parteA = parseInt(dividirDir[0]).toString(16)
+    var parteB = parseInt(dividirDir[1]).toString(16)
+    var parteC = parseInt(dividirDir[2]).toString(16)
+    var parteD = parseInt(dividirDir[3]).toString(16)
+    
+    cadenaBin = agregarDigitoFaltante(parteA, 2 - parteA.length) + agregarDigitoFaltante(parteB, 2 - parteB.length) + agregarDigitoFaltante(parteC, 2 - parteC.length) + agregarDigitoFaltante(parteD, 2 - parteD.length)
     //console.log(cadenaBin)
-    return parseInt(cadenaBin, 2)
+    
+    return cadenaBin
 }
 
 /**
@@ -596,4 +595,12 @@ function pintarDatagramaB() {
     }
 
     document.getElementById('ipHexadecimal').innerHTML = dataFinal
+}
+
+function procesarEjemplo(){
+    document.getElementById('unidadMaxima').defaultValue = "1500"
+    document.getElementById("longitudTotal").defaultValue = "5000"
+    document.getElementById("tipoProtocolo").value = "1"
+    document.getElementById("direccionOrigen").defaultValue = "192.168.20.5"
+    document.getElementById("direccionDestino").defaultValue = "192.168.30.7"
 }

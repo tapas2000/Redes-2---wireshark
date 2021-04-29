@@ -234,7 +234,7 @@ function armarFrame(ltDatagrama, numIdentificacion, df, mf, desplazamiento, tiem
     frameHexa += "-" + dirIpOrigenHex + "-" + dirIpDestinoHex
     frameBinario += "-" + dirIpOrigenBin + "-" + dirIpDestinoBin
 
-    console.log("Frame Hexa : ",frameHexa)
+    //console.log("Frame Hexa : ",frameHexa)
     return frameHexa + ":" + frameBinario
 }
 
@@ -603,5 +603,4 @@ function procesarEjemplo(){
     document.getElementById("tipoProtocolo").value = "1"
     document.getElementById("direccionOrigen").defaultValue = "192.168.20.5"
     document.getElementById("direccionDestino").defaultValue = "192.168.30.7"
-    guardarD()
 }

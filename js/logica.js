@@ -603,4 +603,5 @@ function procesarEjemplo(){
     document.getElementById("tipoProtocolo").value = "1"
     document.getElementById("direccionOrigen").defaultValue = "192.168.20.5"
     document.getElementById("direccionDestino").defaultValue = "192.168.30.7"
+    guardarD()
 }
